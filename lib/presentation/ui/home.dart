@@ -1,4 +1,6 @@
+import 'package:alhadith/presentation/stateManager/databaseController.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../data/color_plate.dart';
 
@@ -7,6 +9,7 @@ class AlhadithDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HadithController controller = Get.put(HadithController());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Appcolor.primarycolor, // Set the app bar color
@@ -19,38 +22,58 @@ class AlhadithDetailsPage extends StatelessWidget {
           IconButton(
             onPressed: () {},
             icon: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.white
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(10))
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(10))
-              ),
                 child: Icon(Icons.sort_by_alpha_rounded,color: Colors.white,)),
           ),
         ],
       ),
       body: Container(
-        color: Appcolor.primarycolor,
-        // Set body background color to primary color
-        child: ClipPath(
-          clipper: ReverseCurveClipper(),
-          child: Container(
-            color: Colors.white, // Background color of curved area
-            height: 100, // Adjust the height of the curved area as needed
-            width: MediaQuery.of(context).size.width,
-            child: Center(
-              child: Text(
-                "Your Content Here",
-                style: TextStyle(
-                  color: Appcolor.primarycolor,
-                  // Text color matches the app bar color
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ),
+        padding: EdgeInsets.all(16.0),
+        child: Obx(() {
+          if (controller.chapters.isEmpty &&
+              controller.books.isEmpty &&
+              controller.hadiths.isEmpty &&
+              controller.sections.isEmpty) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return ListView(
+              children: [
+                ...controller.chapters.map((chapter) => ListTile(
+                  title: Text('Chapter: ${chapter.title}'),
+                  onTap: () {
+                    // Handle click event for chapter
+                  },
+                )).toList(),
+                ...controller.books.map((book) => ListTile(
+                  title: Text('Book: ${book.title}'),
+                  onTap: () {
+                    // Handle click event for book
+                  },
+                )).toList(),
+                ...controller.hadiths.map((hadith) => ListTile(
+                  title: Text('Hadith: ${hadith.ar}'),
+                  onTap: () {
+                    // Handle click event for hadith
+                  },
+                )).toList(),
+                ...controller.sections.map((section) => ListTile(
+                  title: Text('Section: ${section.title}'),
+                  onTap: () {
+                    // Handle click event for section
+                  },
+                )).toList(),
+              ],
+            );
+
+
+          }
+        }),
+
       ),
     );
   }
